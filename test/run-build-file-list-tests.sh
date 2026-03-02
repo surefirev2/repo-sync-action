@@ -24,7 +24,9 @@ git add -A && git commit -q -m "init"
 printf '.github/workflows/*\n.github/scripts/*\n' > include_paths.txt
 touch exclusions.txt
 
+# GITHUB_OUTPUT is used by the GA wrapper; export so the child process sees it
 GITHUB_OUTPUT=$(mktemp)
+export GITHUB_OUTPUT
 REPOS="" bash "$GA_SCRIPT" || true
 # GA script with empty REPOS uses include_paths.txt and writes to files_to_sync.txt in cwd
 # Actually GA script with empty REPOS runs build-file-list with --include-file and --output-dir .

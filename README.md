@@ -98,3 +98,9 @@ Sync targets and file sets are defined in `.github/template-sync.yml` in your te
 - **CI:** Lint (ShellCheck), unit tests (resolve-config and build-file-list with fixtures), and optional integration (dry-run). See [.github/workflows/ci.yaml](.github/workflows/ci.yaml).
 - **Release:** Push a version tag (e.g. `v1.0.0`) to create a GitHub Release.
 - **Pre-commit:** [.pre-commit-config.yaml](.pre-commit-config.yaml) for local checks; run `pre-commit install`.
+
+### Testing
+
+- **All tests:** `make test` (runs bash test runners and the pytest harness).
+- **Bash-only tests:** `make test-bash` (runs the `test/run-*-tests.sh` scripts directly).
+- **Python harness tests:** `make test-python` (installs `requirements.txt` and runs `pytest`).

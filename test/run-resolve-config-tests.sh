@@ -38,7 +38,7 @@ assert_repos_list() {
 
 echo "=== Test 1: literal repos only ==="
 work_dir=$(mktemp -d)
-trap "rm -rf $work_dir; cleanup" EXIT
+trap 'rm -rf "$work_dir"; cleanup' EXIT
 cp "$FIXTURES/literal-repos.yml" "$work_dir/config.yml"
 OUTPUT_FILE=$(mktemp)
 GITHUB_OUTPUT="$OUTPUT_FILE" bash "$RESOLVE_SCRIPT" \
@@ -55,7 +55,7 @@ echo "Test 1 passed."
 
 echo "=== Test 2: repo_include_paths override ==="
 work_dir=$(mktemp -d)
-trap "rm -rf $work_dir; cleanup" EXIT
+trap 'rm -rf "$work_dir"; cleanup' EXIT
 cp "$FIXTURES/with-repo-include-paths.yml" "$work_dir/config.yml"
 GITHUB_OUTPUT=$(mktemp) bash "$RESOLVE_SCRIPT" \
   --config "$work_dir/config.yml" \

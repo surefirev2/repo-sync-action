@@ -28,7 +28,7 @@ REPOS=""
 for entry in $REPOS_RAW; do
   [[ -z "$entry" ]] && continue
   if echo "$entry" | grep -q '\*'; then
-    re=$(echo "$entry" | sed 's/\*/.*/g')
+    re="${entry//\*/.*}"
     for name in $(gh repo list "$ORG" --limit 200 --json name -q '.[].name' 2>/dev/null || true); do
       echo "$name" | grep -qE "^${re}$" && REPOS="${REPOS} ${name}"
     done
@@ -57,10 +57,12 @@ printf '%s\n' "$EXCLUSIONS" > "$OUT_DIR/exclusions.txt"
 
 # GitHub Actions: write outputs
 if [[ -n "${GITHUB_OUTPUT:-}" ]]; then
-  echo "repos_list=$REPOS" >> "$GITHUB_OUTPUT"
-  echo "exclusions<<EOF" >> "$GITHUB_OUTPUT"
-  echo "$EXCLUSIONS" >> "$GITHUB_OUTPUT"
-  echo "EOF" >> "$GITHUB_OUTPUT"
+  {
+    echo "repos_list=$REPOS"
+    echo "exclusions<<EOF"
+    echo "$EXCLUSIONS"
+    echo "EOF"
+  } >> "$GITHUB_OUTPUT"
 fi
 
 echo "Resolved repos: ${REPOS:-none}"

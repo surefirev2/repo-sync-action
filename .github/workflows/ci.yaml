@@ -24,12 +24,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: Resolve-config tests
-        run: bash test/run-resolve-config-tests.sh
-
-      - name: Build-file-list tests
-        run: bash test/run-build-file-list-tests.sh
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install test dependencies
+        run: pip install -r requirements.txt
+      - name: Run tests
+        run: make test
 
   integration:
     name: Integration (dry-run)

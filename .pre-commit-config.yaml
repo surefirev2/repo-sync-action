@@ -8,3 +8,27 @@ repos:
       - id: check-yaml
       - id: check-json
       - id: check-added-large-files
+      - id: check-merge-conflict
+      - id: check-case-conflict
+      - id: check-symlinks
+      - id: mixed-line-ending
+      - id: detect-private-key
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.10.0.1
+    hooks:
+      - id: shellcheck
+        args: ["-x"]
+        files: "\\.sh$"
+  - repo: https://github.com/scop/pre-commit-shfmt
+    rev: v3.7.0-1
+    hooks:
+      - id: shfmt
+        types: [shell]
+        args: ["-i", "2", "-ci"]
+  - repo: local
+    hooks:
+      - id: repo-sync-bash-tests
+        name: repo-sync bash tests
+        entry: make test-bash
+        language: system
+        pass_filenames: false

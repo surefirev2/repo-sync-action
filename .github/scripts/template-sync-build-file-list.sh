@@ -51,7 +51,7 @@ build_one_list() {
   local out_file="$2"
   if [[ -n "$src_file" && -s "$src_file" ]]; then
     git ls-files > all_files.txt
-    > "$out_file"
+    : > "$out_file"
     while IFS= read -r path; do
       [[ -z "$path" ]] && continue
       expand_path "$path" >> "$out_file"
@@ -76,7 +76,7 @@ if [[ -n "$REPOS_LIST" ]]; then
   for repo in $REPOS_LIST; do
     [[ -z "$repo" ]] && continue
     merged=$(mktemp)
-    trap "rm -f '$merged'" RETURN
+    trap 'rm -f "$merged"' RETURN
     [[ -s "$INCLUDE_FILE" ]] && cat "$INCLUDE_FILE" >> "$merged"
     repo_include="$INCLUDE_DIR/include_paths_${repo}.txt"
     [[ -s "$repo_include" ]] && cat "$repo_include" >> "$merged"

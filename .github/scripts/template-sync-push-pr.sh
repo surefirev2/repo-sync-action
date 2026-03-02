@@ -56,7 +56,7 @@ for repo in $REPOS_LIST; do
 
   # Per-repo file list when FILES_LIST_TEMPLATE is set (e.g. files_to_sync_%s.txt)
   if [[ -n "$FILES_LIST_TEMPLATE" ]]; then
-    FILES_LIST=$(printf "$FILES_LIST_TEMPLATE" "$repo")
+    FILES_LIST=$(printf '%s' "$repo" | xargs -I '{}' printf "$FILES_LIST_TEMPLATE" '{}')
   fi
   [[ -f "$FILES_LIST" ]] || { echo "Files list not found: $FILES_LIST" >&2; exit 1; }
   # Absolute path so we can read the list after cd into dest_repo
@@ -79,7 +79,11 @@ for repo in $REPOS_LIST; do
   rm -rf dest_repo
   git clone --depth 1 "https://x-access-token:${GH_TOKEN}@github.com/${ORG}/${repo}.git" dest_repo
   cd dest_repo
-  git fetch origin "${BRANCH}" 2>/dev/null && git checkout "${BRANCH}" || git checkout -b "${BRANCH}"
+  if git fetch origin "${BRANCH}" 2>/dev/null && git checkout "${BRANCH}"; then
+    :
+  else
+    git checkout -b "${BRANCH}"
+  fi
   cd ..
 
   while IFS= read -r f; do

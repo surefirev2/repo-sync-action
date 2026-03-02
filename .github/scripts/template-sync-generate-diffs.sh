@@ -24,6 +24,6 @@ for r in $REPOS; do
   list="files_to_sync_${r}.txt"
   [[ -s "$list" ]] || continue
   FILES=$(tr '\n' ' ' < "$list")
-  git diff "$BASE_REF" "$HEAD_REF" -- $FILES > "sync_diff_${r}.txt" 2>/dev/null || echo -n '' > "sync_diff_${r}.txt"
+  git diff "$BASE_REF" "$HEAD_REF" -- "$FILES" > "sync_diff_${r}.txt" 2>/dev/null || echo -n '' > "sync_diff_${r}.txt"
   echo "Diff lines for $r: $(wc -l < "sync_diff_${r}.txt")"
 done
