@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
-# OWNED BY template-template — do not edit. Changes will be overwritten on the next sync unless made in this repo.
-# Source: https://github.com/surefirev2/template-template
 #
 # Build list of template files to sync.
 # Paths in include_paths / repo_include_paths may end with "/*" to mean all tracked files under that directory (e.g. .github/scripts/*).

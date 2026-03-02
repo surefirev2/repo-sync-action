@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
-# OWNED BY template-template — do not edit. Changes will be overwritten on the next sync unless made in this repo.
-# Source: https://github.com/surefirev2/template-template
 #
 # Upsert a sticky comment on a PR with template sync preview (target repos, file list(s), and diff(s) per repo).
 # Env: GH_TOKEN, REPOS (space-separated), COUNT, FILES_LIST (union), optional FILES_LIST_TEMPLATE (files_to_sync_%s.txt),

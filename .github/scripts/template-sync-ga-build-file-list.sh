@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
-# OWNED BY template-template — do not edit. Changes will be overwritten on the next sync unless made in this repo.
-# Source: https://github.com/surefirev2/template-template
 #
 # GHA wrapper: choose include vs exclusions and per-repo vs single, then call template-sync-build-file-list.sh.
 # Env: REPOS (space-separated, from config), cwd must have include_paths.txt and/or exclusions.txt.

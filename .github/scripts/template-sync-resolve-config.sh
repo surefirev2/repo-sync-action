@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
-# OWNED BY template-template — do not edit. Changes will be overwritten on the next sync unless made in this repo.
-# Source: https://github.com/surefirev2/template-template
 #
 # Resolve template-sync config: repo list (literal + glob), include_paths (allowlist), exclude_paths (blacklist).
 # Writes GITHUB_OUTPUT (repos_list, exclusions), include_paths.txt and exclusions.txt in output dir.

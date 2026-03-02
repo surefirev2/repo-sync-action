@@ -1,0 +1,47 @@
+---
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run ShellCheck
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq shellcheck
+          shellcheck .github/scripts/*.sh test/run-*.sh
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Resolve-config tests
+        run: bash test/run-resolve-config-tests.sh
+
+      - name: Build-file-list tests
+        run: bash test/run-build-file-list-tests.sh
+
+  integration:
+    name: Integration (dry-run)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run template sync (dry-run)
+        uses: .
+        with:
+          config_path: .github/template-sync.yml
+          org: ${{ github.repository_owner }}
+          token: ""
+          dry_run: true
+          draft_pr: false

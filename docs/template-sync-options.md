@@ -2,10 +2,10 @@
 
 ## Implementation
 
-Template sync is implemented as a **push-based flow that opens PRs** (Option B):
+Template sync is implemented as a **push-based flow that opens PRs**. Sync logic lives in the **Template Sync Action** ([surefirev2/repo-sync-action](https://github.com/surefirev2/repo-sync-action)); template repos call the action from a thin workflow and provide a config file.
 
 - **Trigger:** Push to `main` (sync runs) or `pull_request` to `main` (preview only: target repos and file list are shown in the job summary; no sync).
-- **Workflow:** [.github/workflows/sync.yaml](../.github/workflows/sync.yaml) runs in the template repo. It reads [.github/template-sync.yml](../.github/template-sync.yml) for:
+- **Workflow:** In your template repo, a workflow (e.g. [.github/workflows/sync.yaml](../.github/workflows/sync.yaml)) checks out the repo, creates a token, and runs the action with `uses: surefirev2/repo-sync-action@v1`. The action reads [.github/template-sync.yml](../.github/template-sync.yml) for:
   - **Repos:** `repositories` lists exact repo names and/or glob patterns; patterns are resolved via `gh repo list`.
   - **Files:** If `include_paths` is non-empty, only those paths are synced (allowlist). Otherwise `exclude_paths` is used as a blacklist.
 - **Behavior:** For each dependent repo, the workflow clones the repo, copies the included files from the template into branch `chore/template-sync`, pushes the branch, and creates a pull request (or updates the existing PR if one is already open for that branch). There is **no direct push to the default branch** of dependents.

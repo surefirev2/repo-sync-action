@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
-# OWNED BY template-template — do not edit. Changes will be overwritten on the next sync unless made in this repo.
-# Source: https://github.com/surefirev2/template-template
 #
 # Generate per-repo diff files (sync_diff_<repo>.txt) for PR preview. Requires fetch-depth >= 2.
 # Env: REPOS (space-separated). Uses HEAD^1 = base, HEAD^2 = PR head (merge commit).

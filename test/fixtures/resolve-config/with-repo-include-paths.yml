@@ -1,0 +1,13 @@
+# Fixture: literal repos with repo_include_paths overrides
+repositories:
+  - repo-a
+  - repo-b
+
+include_paths:
+  - .github/workflows/sync.yaml
+
+repo_include_paths:
+  repo-b:
+    - .github/scripts/*
+
+exclude_paths: []

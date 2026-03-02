@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
-# OWNED BY template-template — do not edit. Changes will be overwritten on the next sync unless made in this repo.
-# Source: https://github.com/surefirev2/template-template
 #
 # For each dependent repo: clone, copy included files, push branch, create or update PR.
 # Env: ORG, GH_TOKEN (not required if DRY_RUN=1), BRANCH, REPOS_LIST, FILES_LIST or FILES_LIST_TEMPLATE (e.g. files_to_sync_%s.txt).

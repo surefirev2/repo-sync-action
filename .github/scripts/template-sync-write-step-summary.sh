@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
-# OWNED BY template-template — do not edit. Changes will be overwritten on the next sync unless made in this repo.
-# Source: https://github.com/surefirev2/template-template
 #
 # Append template sync preview to GITHUB_STEP_SUMMARY (GitHub Actions job summary).
 # Env: REPOS (target repos), COUNT (file count), FILES_LIST (path to union file list, default files_to_sync.txt).
