@@ -93,7 +93,7 @@ The caller workflow must grant `contents: write` and `pull_requests: write`. Use
 This repo contains the action code only. Add the workflow and config in your template repo.
 
 - **CI:** Lint (ShellCheck) and tests. [.github/workflows/ci.yaml](.github/workflows/ci.yaml)
-- **Release:** Push a version tag (e.g. `v1.0.0`) to create a GitHub Release.
+- **Release:** [Semantic Release](https://github.com/ahmadnassri/action-semantic-release) runs on push to `main`; use [Conventional Commits](https://www.conventionalcommits.org/) to drive version bumps and GitHub Releases.
 - **Pre-commit:** [.pre-commit-config.yaml](.pre-commit-config.yaml); run `pre-commit install`.
 
 ### Testing
