@@ -6,11 +6,11 @@ This document defines the supported schema for `.github/template-sync.yml`. All 
 
 ### `repositories` (required)
 
-List of downstream repo names and/or glob patterns. Exact names are used as-is; patterns (e.g. `terraform-*`) are resolved via `gh repo list` against the org in [template-sync-resolve-config.sh](../.github/scripts/template-sync-resolve-config.sh).
+List of downstream repo names and/or glob patterns. Exact names are used as-is; patterns (e.g. `terraform-*`) are resolved via `gh repo list` against the org in [template-sync-resolve-config.sh](../src/template-sync-resolve-config.sh).
 
 ### `include_paths` (optional)
 
-Allowlist of paths to sync. When non-empty, **only** these paths are synced to all repos (unless overridden per repo via `repo_include_paths`). Paths may end with `/*` to mean all tracked files under that directory (e.g. `.github/scripts/*`); see [template-sync-build-file-list.sh](../.github/scripts/template-sync-build-file-list.sh).
+Allowlist of paths to sync. When non-empty, **only** these paths are synced to all repos (unless overridden per repo via `repo_include_paths`). Paths may end with `/*` to mean all tracked files under that directory (e.g. `src/*`); see [template-sync-build-file-list.sh](../src/template-sync-build-file-list.sh).
 
 ### `exclude_paths` (optional)
 

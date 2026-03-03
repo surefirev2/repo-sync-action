@@ -1,0 +1,10 @@
+# Fixture: literal repo names only (no globs), allowlist mode
+repositories:
+  - repo-a
+  - repo-b
+
+include_paths:
+  - .github/workflows/sync.yaml
+  - src/sync.sh
+
+exclude_paths: []

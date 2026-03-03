@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
-# OWNED BY template-template — do not edit. Changes will be overwritten on the next sync unless made in this repo.
-# Source: https://github.com/surefirev2/template-template
 #
 # Upsert a sticky comment on a PR with template sync preview (target repos, file list(s), and diff(s) per repo).
 # Env: GH_TOKEN, REPOS (space-separated), COUNT, FILES_LIST (union), optional FILES_LIST_TEMPLATE (files_to_sync_%s.txt),
@@ -97,7 +95,7 @@ trap 'rm -f "$BODY_FILE"' EXIT
     for r in $REPOS; do
       [[ -z "$r" ]] || [[ "$r" == "none" ]] && continue
       if [[ -n "$FILES_LIST_TEMPLATE" ]]; then
-        fl=$(printf "$FILES_LIST_TEMPLATE" "$r")
+        fl=$(printf '%s' "$r" | xargs -I '{}' printf "$FILES_LIST_TEMPLATE" '{}')
         if [[ -f "$fl" && -s "$fl" ]]; then
           echo ""
           echo "<details><summary>File list for \`$r\`</summary>"
@@ -110,7 +108,7 @@ trap 'rm -f "$BODY_FILE"' EXIT
         fi
       fi
       if [[ -n "$DIFF_FILE_TEMPLATE" ]]; then
-        df=$(printf "$DIFF_FILE_TEMPLATE" "$r")
+        df=$(printf '%s' "$r" | xargs -I '{}' printf "$DIFF_FILE_TEMPLATE" '{}')
         append_diff_section "$df" "Diff of synced files for \`$r\` (base → PR head)"
       fi
     done
