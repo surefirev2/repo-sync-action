@@ -16,14 +16,14 @@ Extract the template-sync functionality from `template-template` into a standalo
 
 1. **Single source of truth** — All sync logic (resolve config, build file list, clone/copy/push/PR) lives in the new action repository; template repos only reference the action and hold config.
 2. **Semantic versioning and immutable releases** — Action is released with tags (e.g. `v1.0.0`); consumers can pin to a fixed version; release process supports changelogs (e.g. from conventional commits).
-3. **Backward-compatible config schema** — Existing [`.github/template-sync.yml`](.github/template-sync.yml) files work without modification; allowlist/blacklist and `repo_include_paths` behave as documented today.
+3. **Backward-compatible config schema** — Existing [`.github/template-sync.yml`](docs/template-sync-config-schema.md) files work without modification; allowlist/blacklist and `repo_include_paths` behave as documented today.
 4. **Documented inputs, outputs, and permissions** — Action exposes clear inputs (e.g. config path, org, token, dry-run, draft-pr) and outputs (e.g. repos-list, files-count); required GitHub App permissions are documented.
 5. **Tested and linted codebase** — New repo includes CI for shell lint (e.g. shellcheck), tests (e.g. resolve-config and build-file-list with fixture configs), and optional integration/dry-run validation.
 
 ## Anti-goals
 
 1. **No direct push to downstream default branches** — Sync always opens or updates a pull request; merging remains a separate, explicit step (manual or automated elsewhere).
-2. **No breaking change to existing config schema** — The supported schema for [`.github/template-sync.yml`](.github/template-sync.yml) (repositories, include_paths, exclude_paths, repo_include_paths) will not be changed in a breaking way without a documented migration path.
+2. **No breaking change to existing config schema** — The supported schema for [`.github/template-sync.yml`](docs/template-sync-config-schema.md) (repositories, include_paths, exclude_paths, repo_include_paths) will not be changed in a breaking way without a documented migration path.
 3. **No new required permissions** — The action will not require permissions beyond what the GitHub App already uses today: `contents: write` and `pull_requests: write` on downstream repos.
 
 ---
@@ -69,11 +69,11 @@ Extract the template-sync functionality from `template-template` into a standalo
 
 **As a** consumer of the action (template repo with an existing config),
 **I want** the config schema to stay the same
-**so that** I do not have to change my existing [`.github/template-sync.yml`](.github/template-sync.yml).
+**so that** I do not have to change my existing [`.github/template-sync.yml`](docs/template-sync-config-schema.md).
 
 | ID | Acceptance criteria |
 |----|----------------------|
-| AC-4.1 | Existing [`.github/template-sync.yml`](.github/template-sync.yml) files that follow the current schema work without modification. |
+| AC-4.1 | Existing [`.github/template-sync.yml`](docs/template-sync-config-schema.md) files that follow the current schema work without modification. |
 | AC-4.2 | Allowlist mode (non-empty `include_paths`), blacklist mode (empty `include_paths`, non-empty `exclude_paths`), and `repo_include_paths` overrides behave as documented in [docs/template-sync-config-schema.md](docs/template-sync-config-schema.md). |
 
 ### US-5: CI runs on every PR (action repo)

@@ -31,18 +31,3 @@ jobs:
         run: pip install -r requirements.txt
       - name: Run tests
         run: make test
-
-  integration:
-    name: Integration (dry-run)
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Run template sync (dry-run)
-        uses: .
-        with:
-          config_path: .github/template-sync.yml
-          org: ${{ github.repository_owner }}
-          token: ""
-          dry_run: true
-          draft_pr: false

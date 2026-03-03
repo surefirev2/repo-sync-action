@@ -1,10 +1,10 @@
-# Template Sync Action
+# repo-sync-action
 
-Reusable GitHub Action that syncs files from a template repository to many downstream repositories via pull requests. Template repos use this action with a config file; sync logic lives here as a single source of truth.
+Reusable GitHub Action that syncs files from a **template** repository to many downstream repositories via pull requests. Add the action to your template repo; sync logic lives in this repo.
 
 ## Usage
 
-Add a workflow in your template repository that checks out the repo, creates a token (e.g. via a GitHub App), and runs the action:
+In your **template** repository (the repo that holds the canonical files), add a workflow that runs this action:
 
 ```yaml
 name: Template Sync
@@ -60,13 +60,13 @@ Pin to a full tag (e.g. `@v1.0.0`) for immutable releases.
 
 ## Inputs
 
-| Input         | Required | Default                       | Description |
-|---------------|----------|-------------------------------|-------------|
-| `config_path` | No       | `.github/template-sync.yml`   | Path to template-sync config YAML (relative to workspace). |
-| `org`         | No       | `github.repository_owner`     | GitHub org used to resolve repo list (and globs). |
-| `token`       | No*      | `""`                          | GitHub token (e.g. from `create-github-app-token`). Required for non–dry-run; use empty for dry-run. |
-| `dry_run`     | No       | `false`                       | If true, only log what would be synced; no clone, push, or PR. |
-| `draft_pr`    | No       | `false`                       | If true, create or update PRs as draft. |
+| Input         | Required | Default                     | Description |
+|---------------|----------|-----------------------------|-------------|
+| `config_path` | No       | `.github/template-sync.yml` | Path to template-sync config YAML (relative to the workspace). |
+| `org`         | No       | `github.repository_owner`   | GitHub org used to resolve repo list and globs. |
+| `token`       | No*      | `""`                        | GitHub token (e.g. from `create-github-app-token`). Required for non–dry-run; use empty for dry-run. |
+| `dry_run`     | No       | `false`                     | If true, only log what would be synced; no clone, push, or PR. |
+| `draft_pr`    | No       | `false`                     | If true, create or update PRs as draft. |
 
 ## Outputs
 
@@ -75,32 +75,29 @@ Pin to a full tag (e.g. `@v1.0.0`) for immutable releases.
 | `repos_list` | Space-separated list of target repo names. |
 | `count`      | Number of files that would be (or were) synced. |
 
-## Permissions
-
-The caller workflow must grant:
-
-- `contents: write` — create branches and push commits in downstream repos.
-- `pull_requests: write` — create and update PRs in downstream repos.
-
-Use a GitHub App (or token) that has these permissions on each dependent repo.
-
 ## Config
 
-Sync targets and file sets are defined in `.github/template-sync.yml` in your template repo. Schema and behavior (allowlist, blacklist, `repo_include_paths`) are documented in [docs/template-sync-config-schema.md](docs/template-sync-config-schema.md).
+In your template repo, add `.github/template-sync.yml` with `repositories` (downstream repo names or globs) and `include_paths` or `exclude_paths`. Schema and behavior are documented in [docs/template-sync-config-schema.md](docs/template-sync-config-schema.md).
+
+## Permissions
+
+The caller workflow must grant `contents: write` and `pull_requests: write`. Use a GitHub App (or token) with those permissions on each dependent repo.
 
 ## Docs
 
 - [Config schema](docs/template-sync-config-schema.md) — `.github/template-sync.yml` format and allowlist/blacklist behavior.
-- [Sync options](docs/template-sync-options.md) — workflow triggers, dry-run, draft PRs, and permissions.
+- [Sync options](docs/template-sync-options.md) — triggers, dry-run, draft PRs, permissions.
 
 ## Development
 
-- **CI:** Lint (ShellCheck), unit tests (resolve-config and build-file-list with fixtures), and optional integration (dry-run). See [.github/workflows/ci.yaml](.github/workflows/ci.yaml).
+This repo contains the action code only. Add the workflow and config in your template repo.
+
+- **CI:** Lint (ShellCheck) and tests. [.github/workflows/ci.yaml](.github/workflows/ci.yaml)
 - **Release:** Push a version tag (e.g. `v1.0.0`) to create a GitHub Release.
-- **Pre-commit:** [.pre-commit-config.yaml](.pre-commit-config.yaml) for local checks; run `pre-commit install`.
+- **Pre-commit:** [.pre-commit-config.yaml](.pre-commit-config.yaml); run `pre-commit install`.
 
 ### Testing
 
-- **All tests:** `make test` (runs bash test runners and the pytest harness).
-- **Bash-only tests:** `make test-bash` (runs the `test/run-*-tests.sh` scripts directly).
-- **Python harness tests:** `make test-python` (installs `requirements.txt` and runs `pytest`).
+- `make test` — bash test runners and pytest harness.
+- `make test-bash` — bash scripts only.
+- `make test-python` — pytest only.
