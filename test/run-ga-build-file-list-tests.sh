@@ -16,6 +16,8 @@ echo "=== Test 1: single-list mode with include_paths.txt ==="
 work_dir=$(mktemp -d)
 cd "$work_dir"
 git init -q
+git config user.email "test@example.com"
+git config user.name "Test User"
 mkdir -p .github/workflows
 touch .github/workflows/sync.yaml README.md
 git add -A && git commit -q -m "init"
@@ -35,6 +37,8 @@ echo "=== Test 2: per-repo mode with include_paths.txt ==="
 work_dir=$(mktemp -d)
 cd "$work_dir"
 git init -q
+git config user.email "test@example.com"
+git config user.name "Test User"
 mkdir -p .github/workflows .github/scripts
 touch .github/workflows/sync.yaml .github/scripts/foo.sh .github/scripts/bar.sh
 git add -A && git commit -q -m "init"

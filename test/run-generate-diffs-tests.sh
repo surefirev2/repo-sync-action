@@ -16,6 +16,8 @@ echo "=== Test 1: generate diff for single repo ==="
 work_dir=$(mktemp -d)
 cd "$work_dir"
 git init -q
+git config user.email "test@example.com"
+git config user.name "Test User"
 
 echo "v1" > foo.txt
 git add foo.txt
@@ -36,6 +38,8 @@ echo "=== Test 2: missing file list skipped ==="
 work_dir=$(mktemp -d)
 cd "$work_dir"
 git init -q
+git config user.email "test@example.com"
+git config user.name "Test User"
 echo "v1" > foo.txt
 git add foo.txt
 git commit -q -m "add foo v1"

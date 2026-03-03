@@ -17,6 +17,8 @@ echo "=== Test 1: allowlist with directory glob ==="
 work_dir=$(mktemp -d)
 cd "$work_dir"
 git init -q
+git config user.email "test@example.com"
+git config user.name "Test User"
 mkdir -p .github/workflows .github/scripts
 touch .github/workflows/sync.yaml .github/scripts/foo.sh .github/scripts/bar.sh README.md
 git add -A && git commit -q -m "init"
@@ -48,6 +50,8 @@ echo "=== Test 2: blacklist mode ==="
 work_dir=$(mktemp -d)
 cd "$work_dir"
 git init -q
+git config user.email "test@example.com"
+git config user.name "Test User"
 mkdir -p .github
 touch README.md .github/foo.yaml
 git add -A && git commit -q -m "init"
