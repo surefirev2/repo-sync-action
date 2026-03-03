@@ -3,6 +3,13 @@
   "plugins": [
     "@semantic-release/commit-analyzer",
     "@semantic-release/release-notes-generator",
-    ["@semantic-release/github", { "assets": [] }]
+    [
+      "@semantic-release/github",
+      {
+        "assets": [],
+        "releasedLabels": ["released"],
+        "successComment": ":tada: This ${issue.pull_request ? 'pull request' : 'issue'} is included in version **${nextRelease.version}**. The release is available on [GitHub Release](${releases[0].url})."
+      }
+    ]
   ]
 }
