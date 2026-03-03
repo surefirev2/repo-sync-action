@@ -4,7 +4,7 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
-PUSH_PR_SCRIPT="$REPO_ROOT/.github/scripts/template-sync-push-pr.sh"
+PUSH_PR_SCRIPT="$REPO_ROOT/src/template-sync-push-pr.sh"
 
 work_dir=""
 cleanup() {

@@ -25,7 +25,7 @@ Full schema and behavior are documented in [template-sync-config-schema.md](temp
 
 - **Dry run:** In the template repo, go to **Actions → Template Sync → Run workflow**. Check **Dry run (no clone/push/PR)** and run. The job will resolve config, build the file list, and run the sync script in dry-run mode (logs show which repos and files would be synced; no clone, push, or PR).
 - **Draft PR:** Run workflow with **Create PRs as draft** checked (and **Dry run** unchecked) to open template-sync PRs as drafts in each dependent.
-- **Local dry-run:** From the repo root, after resolving config and building the file list (e.g. by running the same steps as the workflow), run: `DRY_RUN=1 ORG=your-org REPOS_LIST="repo1 repo2" FILES_LIST=files_to_sync.txt bash .github/scripts/template-sync-push-pr.sh` (or use `--dry-run`). No token required for dry-run. Set `GITHUB_REPOSITORY=org/repo` if you want the logs to show the correct sync source (commit and PR body use this when the workflow runs in CI).
+- **Local dry-run:** From the repo root, after resolving config and building the file list (e.g. by running the same steps as the workflow), run: `DRY_RUN=1 ORG=your-org REPOS_LIST="repo1 repo2" FILES_LIST=files_to_sync.txt bash src/template-sync-push-pr.sh` (or use `--dry-run`). No token required for dry-run. Set `GITHUB_REPOSITORY=org/repo` if you want the logs to show the correct sync source (commit and PR body use this when the workflow runs in CI).
 
 ## Permissions
 

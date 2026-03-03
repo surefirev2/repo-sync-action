@@ -4,7 +4,7 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
-GEN_DIFFS_SCRIPT="$REPO_ROOT/.github/scripts/template-sync-generate-diffs.sh"
+GEN_DIFFS_SCRIPT="$REPO_ROOT/src/template-sync-generate-diffs.sh"
 
 work_dir=""
 cleanup() {

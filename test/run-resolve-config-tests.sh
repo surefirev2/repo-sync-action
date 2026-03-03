@@ -4,7 +4,7 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
-RESOLVE_SCRIPT="$REPO_ROOT/.github/scripts/template-sync-resolve-config.sh"
+RESOLVE_SCRIPT="$REPO_ROOT/src/template-sync-resolve-config.sh"
 FIXTURES="$SCRIPT_DIR/fixtures/resolve-config"
 OUTPUT_FILE=""
 
@@ -62,7 +62,7 @@ GITHUB_OUTPUT=$(mktemp) bash "$RESOLVE_SCRIPT" \
   --org testorg \
   --out-dir "$work_dir"
 [[ -f "$work_dir/include_paths_repo-b.txt" ]] || { echo "include_paths_repo-b.txt not created"; exit 1; }
-grep -q '.github/scripts/\*' "$work_dir/include_paths_repo-b.txt" || { echo "repo-b include path wrong"; exit 1; }
+grep -q 'src/\*' "$work_dir/include_paths_repo-b.txt" || { echo "repo-b include path wrong"; exit 1; }
 rm -rf "$work_dir"
 trap cleanup EXIT
 echo "Test 2 passed."

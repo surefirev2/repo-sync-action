@@ -4,7 +4,7 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
-GA_SCRIPT="$REPO_ROOT/.github/scripts/template-sync-ga-build-file-list.sh"
+GA_SCRIPT="$REPO_ROOT/src/template-sync-ga-build-file-list.sh"
 
 work_dir=""
 cleanup() {
@@ -39,11 +39,11 @@ cd "$work_dir"
 git init -q
 git config user.email "test@example.com"
 git config user.name "Test User"
-mkdir -p .github/workflows .github/scripts
-touch .github/workflows/sync.yaml .github/scripts/foo.sh .github/scripts/bar.sh
+mkdir -p .github/workflows src
+touch .github/workflows/sync.yaml src/foo.sh src/bar.sh
 git add -A && git commit -q -m "init"
 
-printf '.github/workflows/*\n.github/scripts/*\n' > include_paths.txt
+printf '.github/workflows/*\nsrc/*\n' > include_paths.txt
 touch exclusions.txt
 
 output_file=$(mktemp)
@@ -55,7 +55,7 @@ done
 
 [[ -f files_to_sync.txt ]] || { echo "union files_to_sync.txt not created"; exit 1; }
 grep -q '.github/workflows/sync.yaml' files_to_sync.txt || { echo "sync.yaml missing from union files_to_sync.txt"; exit 1; }
-grep -q '.github/scripts/foo.sh' files_to_sync.txt || { echo "foo.sh missing from union files_to_sync.txt"; exit 1; }
+grep -q 'src/foo.sh' files_to_sync.txt || { echo "foo.sh missing from union files_to_sync.txt"; exit 1; }
 grep -q '^count=' "$output_file" || { echo "count output missing in per-repo mode"; exit 1; }
 echo "Test 2 passed."
 

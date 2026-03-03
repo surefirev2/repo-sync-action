@@ -17,7 +17,7 @@ jobs:
       - name: Run ShellCheck
         run: |
           sudo apt-get update -qq && sudo apt-get install -y -qq shellcheck
-          shellcheck .github/scripts/*.sh test/run-*.sh
+          shellcheck src/*.sh test/run-*.sh
 
   test:
     name: Test

@@ -17,9 +17,9 @@ include_paths:
 repo_include_paths:
   template-1-terraform:
     - .github/workflows/sync.yaml
-    - .github/scripts/*
+    - src/*
   template-cursor:
     - .github/workflows/sync.yaml
-    - .github/scripts/*
+    - src/*
 
 exclude_paths: []

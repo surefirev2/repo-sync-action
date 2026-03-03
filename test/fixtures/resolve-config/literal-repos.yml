@@ -5,6 +5,6 @@ repositories:
 
 include_paths:
   - .github/workflows/sync.yaml
-  - .github/scripts/sync.sh
+  - src/sync.sh
 
 exclude_paths: []

@@ -4,8 +4,8 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
-BUILD_SCRIPT="$REPO_ROOT/.github/scripts/template-sync-build-file-list.sh"
-GA_SCRIPT="$REPO_ROOT/.github/scripts/template-sync-ga-build-file-list.sh"
+BUILD_SCRIPT="$REPO_ROOT/src/template-sync-build-file-list.sh"
+GA_SCRIPT="$REPO_ROOT/src/template-sync-ga-build-file-list.sh"
 
 work_dir=""
 cleanup() {
@@ -19,11 +19,11 @@ cd "$work_dir"
 git init -q
 git config user.email "test@example.com"
 git config user.name "Test User"
-mkdir -p .github/workflows .github/scripts
-touch .github/workflows/sync.yaml .github/scripts/foo.sh .github/scripts/bar.sh README.md
+mkdir -p .github/workflows src
+touch .github/workflows/sync.yaml src/foo.sh src/bar.sh README.md
 git add -A && git commit -q -m "init"
 
-printf '.github/workflows/*\n.github/scripts/*\n' > include_paths.txt
+printf '.github/workflows/*\nsrc/*\n' > include_paths.txt
 touch exclusions.txt
 
 # GITHUB_OUTPUT is used by the GA wrapper; export so the child process sees it
@@ -43,7 +43,7 @@ if [[ "$count" -lt 2 ]]; then
   exit 1
 fi
 grep -q '.github/workflows/sync.yaml' files_to_sync.txt || { echo "sync.yaml missing"; exit 1; }
-grep -q '.github/scripts/foo.sh' files_to_sync.txt || { echo "foo.sh missing"; exit 1; }
+grep -q 'src/foo.sh' files_to_sync.txt || { echo "foo.sh missing"; exit 1; }
 echo "Test 1 passed."
 
 echo "=== Test 2: blacklist mode ==="

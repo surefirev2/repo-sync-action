@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 # Build list of template files to sync.
-# Paths in include_paths / repo_include_paths may end with "/*" to mean all tracked files under that directory (e.g. .github/scripts/*).
+# Paths in include_paths / repo_include_paths may end with "/*" to mean all tracked files under that directory (e.g. src/*).
 # With --repos: build per-repo files_to_sync_<repo>.txt = global include_paths + repo_include_paths[repo] (merged)
 #   and union files_to_sync.txt for preview/diff.
 # Without --repos: single list from --include-file or --exclusions-file.
@@ -35,7 +35,7 @@ done
 expand_path() {
   local path="$1"
   if [[ "$path" == *'*'* ]]; then
-    # e.g. .github/scripts/* -> prefix .github/scripts/, match all tracked files under it
+    # e.g. src/* -> prefix src/, match all tracked files under it
     local prefix="${path%%/\*}"
     if [[ -n "$prefix" ]]; then
       local esc="${prefix//./\\.}"

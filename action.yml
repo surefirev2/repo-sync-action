@@ -45,7 +45,7 @@ runs:
       run: |
         ORG="${{ inputs.org }}"
         if [[ -z "$ORG" ]]; then ORG="$GITHUB_REPOSITORY_OWNER"; fi
-        bash "${{ github.action_path }}/.github/scripts/template-sync-resolve-config.sh" \
+        bash "${{ github.action_path }}/src/template-sync-resolve-config.sh" \
           --config "${{ inputs.config_path }}" \
           --org "$ORG" \
           --out-dir "${{ github.workspace }}"
@@ -56,7 +56,7 @@ runs:
       env:
         DEBUG: "1"
         REPOS: ${{ steps.config.outputs.repos_list }}
-      run: bash "${{ github.action_path }}/.github/scripts/template-sync-ga-build-file-list.sh"
+      run: bash "${{ github.action_path }}/src/template-sync-ga-build-file-list.sh"
       shell: bash
 
     - name: Get merged PR number (push to main)
@@ -87,7 +87,7 @@ runs:
         DEBUG: "1"
         REPOS: ${{ steps.config.outputs.repos_list }}
         COUNT: ${{ steps.files.outputs.count }}
-      run: bash "${{ github.action_path }}/.github/scripts/template-sync-write-step-summary.sh"
+      run: bash "${{ github.action_path }}/src/template-sync-write-step-summary.sh"
       shell: bash
 
     - name: Generate diff of synced files per repo (PR base → head)
@@ -95,7 +95,7 @@ runs:
       env:
         DEBUG: "1"
         REPOS: ${{ steps.config.outputs.repos_list }}
-      run: bash "${{ github.action_path }}/.github/scripts/template-sync-generate-diffs.sh"
+      run: bash "${{ github.action_path }}/src/template-sync-generate-diffs.sh"
       shell: bash
 
     - name: Sync to dependents and open draft PR
@@ -112,7 +112,7 @@ runs:
         FILES_LIST_TEMPLATE: files_to_sync_%s.txt
         DRAFT_PR: "1"
         CHILD_PR_URLS_FILE: child_pr_urls.txt
-      run: bash "${{ github.action_path }}/.github/scripts/template-sync-push-pr.sh" --draft
+      run: bash "${{ github.action_path }}/src/template-sync-push-pr.sh" --draft
       shell: bash
 
     - name: Upsert template sync preview comment on PR
@@ -126,7 +126,7 @@ runs:
         FILES_LIST_TEMPLATE: files_to_sync_%s.txt
         DIFF_FILE_TEMPLATE: sync_diff_%s.txt
         CHILD_PR_URLS_FILE: child_pr_urls.txt
-      run: bash "${{ github.action_path }}/.github/scripts/template-sync-pr-comment.sh" "${{ github.event.pull_request.number }}"
+      run: bash "${{ github.action_path }}/src/template-sync-pr-comment.sh" "${{ github.event.pull_request.number }}"
       shell: bash
 
     - name: Sync to dependents and open PR
@@ -142,5 +142,5 @@ runs:
         FILES_LIST_TEMPLATE: files_to_sync_%s.txt
         DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run && '1' || '' }}
         DRAFT_PR: ${{ github.event_name == 'workflow_dispatch' && inputs.draft_pr && '1' || '' }}
-      run: bash "${{ github.action_path }}/.github/scripts/template-sync-push-pr.sh"
+      run: bash "${{ github.action_path }}/src/template-sync-push-pr.sh"
       shell: bash

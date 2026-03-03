@@ -8,6 +8,6 @@ include_paths:
 
 repo_include_paths:
   repo-b:
-    - .github/scripts/*
+    - src/*
 
 exclude_paths: []

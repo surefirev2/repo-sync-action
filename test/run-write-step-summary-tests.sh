@@ -4,7 +4,7 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
-SUMMARY_SCRIPT="$REPO_ROOT/.github/scripts/template-sync-write-step-summary.sh"
+SUMMARY_SCRIPT="$REPO_ROOT/src/template-sync-write-step-summary.sh"
 
 work_dir=""
 cleanup() {
