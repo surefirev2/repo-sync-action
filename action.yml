@@ -1,4 +1,4 @@
-name: Template Sync
+name: Sync Files PR Action
 description: Sync files from a template repository to downstream repos via pull requests.
 branding:
   icon: git-merge
