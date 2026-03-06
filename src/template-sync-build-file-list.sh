@@ -58,16 +58,20 @@ build_one_list() {
     done < "$src_file"
     sort -u "$out_file" -o "$out_file"
   else
-    # Blacklist fallback
+    # Blacklist fallback (portable: no sed -i, use grep -v)
     git ls-files > all_files.txt
     if [[ -n "$EXCLUSIONS_FILE" && -s "$EXCLUSIONS_FILE" ]]; then
+      filtered=$(mktemp)
+      trap 'rm -f "$filtered"' RETURN
+      cat all_files.txt > "$filtered"
       while IFS= read -r path; do
         [[ -z "$path" ]] && continue
-        sed -i "\|^${path}$|d" all_files.txt 2>/dev/null || true
-        sed -i "\|^${path}/|d" all_files.txt 2>/dev/null || true
+        grep -v -F -x "$path" "$filtered" | grep -v -F "$path/" > "${filtered}.n" && mv "${filtered}.n" "$filtered"
       done < "$EXCLUSIONS_FILE"
+      sort -u "$filtered" -o "$out_file"
+    else
+      sort -u all_files.txt -o "$out_file"
     fi
-    sort -u all_files.txt -o "$out_file"
   fi
 }
 

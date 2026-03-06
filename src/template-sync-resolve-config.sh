@@ -23,7 +23,7 @@ done
 [[ -f "$CONFIG" ]] || { echo "Config not found: $CONFIG" >&2; exit 1; }
 
 # Parse only the repositories section (stop at next top-level key like exclude_paths:)
-REPOS_RAW=$(awk '/^repositories:/{flag=1;next} flag && /^[a-zA-Z_][a-zA-Z0-9_-]*:/{exit} flag' "$CONFIG" 2>/dev/null | grep -E '^\s*-\s*' | sed -E 's/^\s*-\s*"?([^"]+)"?.*/\1/' | tr '\n' ' ' || true)
+REPOS_RAW=$(awk '/^repositories:/{flag=1;next} flag && /^[a-zA-Z_][a-zA-Z0-9_-]*:/{exit} flag' "$CONFIG" 2>/dev/null | grep -E '^[[:space:]]*-[[:space:]]+' | sed -E 's/^[[:space:]]*-[[:space:]]*"?([^"]+)"?.*/\1/' | tr '\n' ' ' || true)
 REPOS=""
 for entry in $REPOS_RAW; do
   [[ -z "$entry" ]] && continue
@@ -39,7 +39,7 @@ done
 REPOS=$(echo "$REPOS" | tr ' ' '\n' | sort -u | tr '\n' ' ' | xargs)
 
 # Parse include_paths (default allowlist for all repos)
-INCLUDES=$(awk '/^include_paths:/{flag=1;next} flag && /^[a-zA-Z_][a-zA-Z0-9_-]*:/{exit} flag' "$CONFIG" 2>/dev/null | grep -E '^\s*-\s*' | sed -E 's/^\s*-\s*"?([^"]+)"?.*/\1/' | grep -v '^\s*$' || true)
+INCLUDES=$(awk '/^include_paths:/{flag=1;next} flag && /^[a-zA-Z_][a-zA-Z0-9_-]*:/{exit} flag' "$CONFIG" 2>/dev/null | grep -E '^[[:space:]]*-[[:space:]]+' | sed -E 's/^[[:space:]]*-[[:space:]]*"?([^"]+)"?.*/\1/' | grep -v '^[[:space:]]*$' || true)
 # Parse repo_include_paths (per-repo overrides: reponame -> list of paths)
 awk '/^repo_include_paths:/{in_sec=1;next} in_sec && /^[a-zA-Z_][a-zA-Z0-9_-]*:/{in_sec=0} in_sec && /^  [a-zA-Z0-9_.-]+:/{gsub(/^  |:$/,"");repo=$0;next} in_sec && /^    - /{gsub(/^    - /,"");print repo, $0}' "$CONFIG" 2>/dev/null | while read -r repo path; do
   [[ -z "$repo" || -z "$path" ]] && continue
@@ -49,7 +49,7 @@ for f in "$OUT_DIR"/include_paths_*.txt; do
   [[ -f "$f" ]] && sort -u "$f" -o "$f"
 done
 # Parse exclude_paths (blacklist; used when include_paths is empty)
-EXCLUSIONS=$(awk '/^exclude_paths:/{flag=1;next} flag && /^[a-zA-Z_][a-zA-Z0-9_-]*:/{exit} flag' "$CONFIG" 2>/dev/null | grep -E '^\s*-\s*' | sed -E 's/^\s*-\s*"?([^"]+)"?.*/\1/' | grep -v '^\s*$' || true)
+EXCLUSIONS=$(awk '/^exclude_paths:/{flag=1;next} flag && /^[a-zA-Z_][a-zA-Z0-9_-]*:/{exit} flag' "$CONFIG" 2>/dev/null | grep -E '^[[:space:]]*-[[:space:]]+' | sed -E 's/^[[:space:]]*-[[:space:]]*"?([^"]+)"?.*/\1/' | grep -v '^[[:space:]]*$' || true)
 mkdir -p "$OUT_DIR"
 # Write one path per line (printf preserves newlines from multi-line variable)
 printf '%s\n' "$INCLUDES" > "$OUT_DIR/include_paths.txt"
