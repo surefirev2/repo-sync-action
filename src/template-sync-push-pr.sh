@@ -50,6 +50,24 @@ CHILD_PR_URLS_FILE="${CHILD_PR_URLS_FILE:-}"
 [[ -n "$REPOS_LIST" ]] || { echo "No dependent repos to sync."; exit 0; }
 [[ -z "$CHILD_PR_URLS_FILE" ]] || : > "$CHILD_PR_URLS_FILE"
 
+# gh pr create --base must not be empty; empty base is treated like head and fails.
+# Prefer API; fall back to origin/HEAD in the clone (cwd = dest_repo when called); then main.
+resolve_default_branch_for_pr() {
+  local b
+  b=$(gh repo view "${ORG}/${repo}" --json defaultBranchRef -q '.defaultBranchRef.name' 2>/dev/null || true)
+  if [[ -z "$b" || "$b" == "null" ]]; then
+    b=$(git symbolic-ref -q refs/remotes/origin/HEAD 2>/dev/null | sed 's@^refs/remotes/origin/@@' || true)
+  fi
+  if [[ -z "$b" || "$b" == "null" ]]; then
+    b="main"
+  fi
+  if [[ "$b" == "$BRANCH" ]]; then
+    echo "template-sync-push-pr: default branch equals sync branch; using main as PR base" >&2
+    b="main"
+  fi
+  printf '%s' "$b"
+}
+
 for repo in $REPOS_LIST; do
   [[ -n "$repo" ]] || continue
   [[ "$repo" != "template-template" ]] || continue
@@ -136,7 +154,7 @@ for repo in $REPOS_LIST; do
   git commit -m "chore(template): sync from $SOURCE_REPO"
   git push origin "${BRANCH}" --force
 
-  DEFAULT_BASE=$(gh repo view "${ORG}/${repo}" --json defaultBranchRef -q .defaultBranchRef.name 2>/dev/null || echo "main")
+  DEFAULT_BASE=$(resolve_default_branch_for_pr)
   PR_BODY_FILE=$(mktemp)
   {
     echo "Automated sync from $SOURCE_REPO."
