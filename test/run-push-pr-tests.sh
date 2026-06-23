@@ -42,4 +42,18 @@ grep -F -q -- 'foo.txt' output.txt || { echo "Expected foo.txt in dry-run output
 grep -F -q -- 'bar/baz.txt' output.txt || { echo "Expected bar/baz.txt in dry-run output"; exit 1; }
 echo "Test 2 passed."
 
+echo "=== Test 3: --dry-run flag without DRY_RUN env ==="
+work_dir=$(mktemp -d)
+cd "$work_dir"
+
+printf 'only.txt\n' > files_to_sync.txt
+
+ORG="testorg" \
+  REPOS_LIST="repo-b" \
+  FILES_LIST="files_to_sync.txt" \
+  bash "$PUSH_PR_SCRIPT" --dry-run > output.txt 2>&1
+
+grep -F -q -- '--- [dry-run] Would sync to testorg/repo-b ---' output.txt || { echo "Expected dry-run header from --dry-run flag"; exit 1; }
+echo "Test 3 passed."
+
 echo "All push-pr tests passed."

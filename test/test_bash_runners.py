@@ -54,3 +54,9 @@ def test_push_pr_bash_runner():
     proc = run_script("run-push-pr-tests.sh")
     assert proc.returncode == 0, proc.stdout + proc.stderr
     assert "All push-pr tests passed." in proc.stdout
+
+
+def test_stage_files_bash_runner():
+    proc = run_script("run-stage-files-tests.sh")
+    assert proc.returncode == 0, proc.stdout + proc.stderr
+    assert "All stage-files tests passed." in proc.stdout

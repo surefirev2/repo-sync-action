@@ -4,12 +4,13 @@
 
 Template sync is implemented as a **push-based flow that opens PRs**. Sync logic lives in the **repo-sync-action** ([surefirev2/repo-sync-action](https://github.com/surefirev2/repo-sync-action)). Your template repo calls the action from a workflow and provides a config file.
 
-- **Trigger:** Push to `main` (sync runs) or `pull_request` to `main` (preview only: target repos and file list are shown in the job summary; no sync).
+- **Trigger:** Push to `main` (sync runs) or `pull_request` to `main` (preview in job summary; opens **draft** child PRs unless `dry_run: true`).
 - **Workflow:** In your template repo, add a workflow that checks out the repo, creates a token, and runs `uses: surefirev2/repo-sync-action@v1`. The action reads `.github/template-sync.yml` in that repo for:
   - **Repos:** `repositories` lists exact repo names and/or glob patterns; patterns are resolved via `gh repo list`.
   - **Files:** If `include_paths` is non-empty, only those paths are synced (allowlist). Otherwise `exclude_paths` is used as a blacklist.
-- **Behavior:** For each dependent repo, the action clones the repo, copies the included files from the template into branch `chore/template-sync`, pushes the branch, and creates a pull request (or updates the existing PR if one is already open for that branch). There is **no direct push to the default branch** of dependents.
+- **Behavior:** For each dependent repo, the action clones the repo, copies the included files from the template into branch `chore/template-sync`, force-adds synced paths (even when the destination `.gitignore` would normally exclude them), pushes the branch, and creates a pull request (or updates the existing PR if one is already open for that branch). There is **no direct push to the default branch** of dependents.
 - **Result:** Each dependent gets a PR; required status checks run on the PR. Merge is manual or can be automated. No automerge workflow is provided.
+- **`dry_run` input:** When `true`, no clone/push/PR on any trigger (including `pull_request`). Preview steps still run on PRs.
 
 ## Config
 
