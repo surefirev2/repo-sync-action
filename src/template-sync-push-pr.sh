@@ -11,6 +11,8 @@
 set -euo pipefail
 if [[ -n "${DEBUG:-}" ]]; then set -x; fi
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 DRY_RUN="${DRY_RUN:-}"
 DRAFT_PR="${DRAFT_PR:-}"
 while [[ $# -gt 0 ]]; do
@@ -86,24 +88,8 @@ for repo in $REPOS_LIST; do
   fi
   cd ..
 
-  while IFS= read -r f; do
-    [[ -z "$f" ]] && continue
-    mkdir -p "dest_repo/$(dirname "$f")"
-    cp "$f" "dest_repo/$f" 2>/dev/null || true
-  done < "$FILES_LIST"
-
   cd dest_repo
-  git add -A
-  # Apply file modes (e.g. executable bit) from template so diff detects permission-only changes
-  while IFS= read -r f; do
-    [[ -z "$f" ]] && continue
-    mode=$(git -C .. ls-files -s -- "$f" 2>/dev/null | awk '{print $1}')
-    if [[ "$mode" == 100755 ]]; then
-      git update-index --chmod=+x "$f"
-    elif [[ "$mode" == 100644 ]]; then
-      git update-index --chmod=-x "$f"
-    fi
-  done < "$FILES_LIST_ABS"
+  bash "$SCRIPT_DIR/template-sync-stage-files.sh" ".." "$FILES_LIST_ABS"
   if git diff --staged --quiet; then
     echo "  No changes for $repo"
     # Still update PR state (e.g. mark draft as ready when syncing after merge)

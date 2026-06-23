@@ -99,7 +99,7 @@ runs:
       shell: bash
 
     - name: Sync to dependents and open draft PR
-      if: github.event_name == 'pull_request' && steps.config.outputs.repos_list != '' && steps.files.outputs.count != '0'
+      if: github.event_name == 'pull_request' && inputs.dry_run != 'true' && steps.config.outputs.repos_list != '' && steps.files.outputs.count != '0'
       env:
         DEBUG: "1"
         GH_TOKEN: ${{ inputs.token }}
@@ -140,7 +140,7 @@ runs:
         PARENT_PR_NUMBER: ${{ github.event_name == 'push' && steps.merged-pr.outputs.number || '' }}
         REPOS_LIST: ${{ steps.config.outputs.repos_list }}
         FILES_LIST_TEMPLATE: files_to_sync_%s.txt
-        DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run && '1' || '' }}
+        DRY_RUN: ${{ inputs.dry_run == 'true' && '1' || '' }}
         DRAFT_PR: ${{ github.event_name == 'workflow_dispatch' && inputs.draft_pr && '1' || '' }}
       run: bash "${{ github.action_path }}/src/template-sync-push-pr.sh"
       shell: bash
