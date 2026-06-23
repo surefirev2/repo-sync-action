@@ -12,11 +12,18 @@ cleanup() {
 }
 trap cleanup EXIT
 
+configure_git() {
+  local repo="$1"
+  git -C "$repo" config user.email "test@example.com"
+  git -C "$repo" config user.name "Test User"
+}
+
 echo "=== Test 1: force-adds paths ignored by destination .gitignore (lib/) ==="
 work_dir=$(mktemp -d)
 cd "$work_dir"
 
 git init -q template
+configure_git template
 cd template
 rel_path=".github/scripts/squawk/tests/fixtures/nested/lib/emr_db/alembic.ini"
 mkdir -p "$(dirname "$rel_path")"
@@ -26,6 +33,7 @@ git commit -qm "template init"
 cd ..
 
 git init -q dest_repo
+configure_git dest_repo
 cd dest_repo
 echo 'lib/' > .gitignore
 git add .gitignore
@@ -47,6 +55,7 @@ work_dir=$(mktemp -d)
 cd "$work_dir"
 
 git init -q template
+configure_git template
 cd template
 mkdir -p scripts
 printf '%s\n' '#!/usr/bin/env bash' 'echo hi' > scripts/run.sh
@@ -56,6 +65,7 @@ git commit -qm "template init"
 cd ..
 
 git init -q dest_repo
+configure_git dest_repo
 cd dest_repo
 git commit --allow-empty -qm "dest init"
 cd ..
