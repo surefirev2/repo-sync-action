@@ -18,6 +18,7 @@ test-bash:
 	bash test/run-pr-comment-tests.sh
 	bash test/run-push-pr-tests.sh
 	bash test/run-stage-files-tests.sh
+	bash test/run-merged-pr-tests.sh
 
 .PHONY: test-python
 test-python:
