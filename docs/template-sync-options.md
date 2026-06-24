@@ -30,6 +30,10 @@ Full schema and behavior are documented in [template-sync-config-schema.md](temp
 
 ## Permissions
 
+The caller workflow must grant `contents: write` and `pull_requests: write`.
+
+The `token` input is used for cross-repo clone, push, and PR creation on downstream repositories. After a merge to `main`, the action resolves the parent PR number via `commits/{sha}/pulls` on the **template** repository using `GITHUB_TOKEN` (not `token`). This allows scoping the App token to downstream repos only.
+
 The GitHub App token used by the workflow must have on each dependent repo at least:
 
 - `contents: write` (create branch, push commits).

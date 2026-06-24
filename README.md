@@ -64,7 +64,7 @@ Pin to a full tag (e.g. `@v1.0.0`) for immutable releases.
 |---------------|----------|-----------------------------|-------------|
 | `config_path` | No       | `.github/template-sync.yml` | Path to template-sync config YAML (relative to the workspace). |
 | `org`         | No       | `github.repository_owner`   | GitHub org used to resolve repo list and globs. |
-| `token`       | No*      | `""`                        | GitHub token (e.g. from `create-github-app-token`). Required for non–dry-run; use empty for dry-run. |
+| `token`       | No*      | `""`                        | GitHub token for **cross-repo** clone, push, and PR creation on downstream repos. Required for non–dry-run. Same-repo merged-PR lookup on push uses `GITHUB_TOKEN` from the caller workflow. |
 | `dry_run`     | No       | `false`                     | If true, only log what would be synced; no clone, push, or PR. |
 | `draft_pr`    | No       | `false`                     | If true, create or update PRs as draft. |
 
@@ -81,7 +81,7 @@ In your template repo, add `.github/template-sync.yml` with `repositories` (down
 
 ## Permissions
 
-The caller workflow must grant `contents: write` and `pull_requests: write`. Use a GitHub App (or token) with those permissions on each dependent repo.
+The caller workflow must grant `contents: write` and `pull_requests: write`. Merged-PR lookup on push uses `GITHUB_TOKEN` on the template repo; the `token` input is for downstream clone/push/PR only. Scope the App token to dependent repos when using repository allowlists.
 
 ## Docs
 
