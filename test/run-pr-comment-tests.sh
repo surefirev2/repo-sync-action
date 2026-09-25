@@ -27,7 +27,14 @@ subcmd="${1:-}"
 case "$subcmd" in
   api)
     # For list-comments, return empty array; for PATCH, just consume input.
-    path="${2:-}"
+    # Skip --paginate and other flags when extracting the path.
+    path=""
+    skip_next=false
+    for arg in "$@"; do
+      if $skip_next; then skip_next=false; continue; fi
+      if [[ "$arg" == "--paginate" ]]; then skip_next=true; continue; fi
+      if [[ "$arg" == repos/* ]]; then path="$arg"; fi
+    done
     if [[ "$path" == repos/*/issues/*/comments ]]; then
       # Simulate no existing comments (so COMMENT_ID is empty)
       :
@@ -58,7 +65,7 @@ REPOS="repo-a repo-b" \
   GH_TOKEN="dummy" \
   bash "$PR_COMMENT_SCRIPT" 123 --repo "surefirev2/template-template"
 
-grep -q 'gh api repos/surefirev2/template-template/issues/123/comments' "$GH_LOG" || { echo "Expected gh api list-comments call"; exit 1; }
+grep -q 'gh api --paginate repos/surefirev2/template-template/issues/123/comments' "$GH_LOG" || { echo "Expected gh api list-comments call"; exit 1; }
 grep -q 'gh pr comment 123 --repo surefirev2/template-template' "$GH_LOG" || { echo "Expected gh pr comment call"; exit 1; }
 echo "Test 1 passed."
 
