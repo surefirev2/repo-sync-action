@@ -122,7 +122,17 @@ for repo in $REPOS_LIST; do
   git commit -m "chore(template): sync from $SOURCE_REPO"
   git push origin "${BRANCH}" --force
 
-  DEFAULT_BASE=$(gh repo view "${ORG}/${repo}" --json defaultBranchRef -q .defaultBranchRef.name 2>/dev/null || echo "main")
+  DEFAULT_BASE=$(gh repo view "${ORG}/${repo}" --json defaultBranchRef -q '.defaultBranchRef.name' 2>/dev/null || true)
+if [[ -z "$DEFAULT_BASE" || "$DEFAULT_BASE" == "null" ]]; then
+  DEFAULT_BASE=$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's|refs/remotes/origin/||' || true)
+fi
+if [[ -z "$DEFAULT_BASE" || "$DEFAULT_BASE" == "null" ]]; then
+  DEFAULT_BASE="main"
+fi
+if [[ "$DEFAULT_BASE" == "$BRANCH" ]]; then
+  echo "Warning: default branch equals sync branch, using 'main' as PR base." >&2
+  DEFAULT_BASE="main"
+fi
   PR_BODY_FILE=$(mktemp)
   {
     echo "Automated sync from $SOURCE_REPO."
