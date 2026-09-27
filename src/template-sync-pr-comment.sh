@@ -125,7 +125,7 @@ trap 'rm -f "$BODY_FILE"' EXIT
 } > "$BODY_FILE"
 
 # Don't fail the script if list-comments fails (e.g. API error); with pipefail, a failing gh in the pipeline would exit
-COMMENT_ID=$(gh api "repos/${REPO}/issues/${PR_NUMBER}/comments" \
+COMMENT_ID=$(gh api --paginate "repos/${REPO}/issues/${PR_NUMBER}/comments" \
   --jq ".[] | select(.user.login == \"github-actions[bot]\" and (.body | contains(\"$MARKER\"))) | .id" 2>/dev/null | head -1) || true
 
 if [[ -n "$COMMENT_ID" ]]; then

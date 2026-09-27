@@ -58,7 +58,7 @@ REPOS="repo-a repo-b" \
   GH_TOKEN="dummy" \
   bash "$PR_COMMENT_SCRIPT" 123 --repo "surefirev2/template-template"
 
-grep -q 'gh api repos/surefirev2/template-template/issues/123/comments' "$GH_LOG" || { echo "Expected gh api list-comments call"; exit 1; }
+grep -q 'gh api --paginate repos/surefirev2/template-template/issues/123/comments' "$GH_LOG" || { echo "Expected gh api --paginate list-comments call"; exit 1; }
 grep -q 'gh pr comment 123 --repo surefirev2/template-template' "$GH_LOG" || { echo "Expected gh pr comment call"; exit 1; }
 echo "Test 1 passed."
 
